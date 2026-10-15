@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Woven Woofs — Embroidered Patches of Dogs in Costumes</title>
+  <meta name="description" content="A new embroidered patch of a dog in a costume, every day. Each drop is numbered — follow along and collect the series.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <a class="wordmark" href="#">Woven Woofs</a>
+    <nav>
+      <a href="#drops">Drops</a>
+      <a href="#about">About</a>
+      <a href="https://www.instagram.com/wovenwoofs/" target="_blank" rel="noopener">Instagram</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Hero: short ambient loop goes here (hero-001.mp4). Falls back to the still. -->
+    <section class="hero">
+      <div class="hero-media sheen">
+        <video autoplay muted loop playsinline poster="images/drop-001.jpg">
+          <source src="images/hero-001.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="hero-copy">
+        <p class="kicker">Patch Drop #001 — The Puggle Lion</p>
+        <h1>Embroidered patches of dogs in costumes.</h1>
+        <p class="lede">One new numbered drop every day. Follow along and collect the series.</p>
+        <div class="hero-links">
+          <a class="btn" href="https://www.instagram.com/wovenwoofs/" target="_blank" rel="noopener">Follow on Instagram</a>
+          <a class="btn btn-ghost" href="#drops">See the drops</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="drops" class="drops">
+      <h2>The drops</h2>
+      <p class="section-sub">Newest first. Every patch is numbered.</p>
+      <div id="drop-grid" class="drop-grid"></div>
+    </section>
+
+    <section id="about" class="about">
+      <h2>About</h2>
+      <div class="about-body">
+        <p>Woven Woofs is a daily series of embroidered patches — dogs in costumes, each one numbered, released one per day.</p>
+        <p>How they're made: each image starts as a Midjourney render, then gets picked, directed, and finished by Robert. The patches are digital artwork in an embroidered style.</p>
+        <p>You get a say in what comes next: vote on upcoming costumes, nominate breeds, or request your own dog as a future patch.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="social">
+      <a href="https://www.instagram.com/wovenwoofs/" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://www.pinterest.com/wovenwoofs/" target="_blank" rel="noopener">Pinterest</a>
+      <a href="https://www.tiktok.com/@wovenwoofs" target="_blank" rel="noopener">TikTok</a>
+    </div>
+    <p>© 2026 Woven Woofs · <a href="mailto:hello@wovenwoofs.com">hello@wovenwoofs.com</a></p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
