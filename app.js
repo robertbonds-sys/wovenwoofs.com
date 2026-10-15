@@ -1,5 +1,6 @@
 /* Woven Woofs drops. Newest first. To add a drop: copy an entry,
-   bump the number, point image at images/drop-NNN.ext. */
+   bump the number, point image at images/drop-NNN.jpg.
+   The hero, ticker, vault cards, and countdown all read from this list. */
 
 const DROPS = [
   {
@@ -18,29 +19,142 @@ const DROPS = [
   }
 ];
 
+const pad = n => String(n).padStart(3, "0");
+const fmtDate = iso =>
+  new Date(iso + "T12:00:00Z").toLocaleDateString("en-US", {
+    month: "short", day: "numeric", year: "numeric", timeZone: "UTC"
+  });
+
+/* --- Collection: per device, no accounts ---
+   Collect buttons are label-driven on purpose. To sell later,
+   swap the label to "Buy" and point at checkout — no redesign. */
+const STORE_KEY = "wovenwoofs.collection.v1";
+
+function loadCollected() {
+  try {
+    return new Set(JSON.parse(localStorage.getItem(STORE_KEY) || "[]"));
+  } catch (err) {
+    return new Set();
+  }
+}
+function saveCollected(set) {
+  try {
+    localStorage.setItem(STORE_KEY, JSON.stringify([...set]));
+  } catch (err) { /* private mode etc.: collecting just won't persist */ }
+}
+let collected = loadCollected();
+
+/* --- Hero = today's drop (DROPS[0]) --- */
+const latest = DROPS[0];
+document.getElementById("hero-kicker").textContent = `Drop Nº ${pad(latest.n)} · fresh today`;
+document.getElementById("hero-title").textContent = latest.title;
+const heroVideo = document.getElementById("hero-video");
+heroVideo.poster = latest.image;
+document.getElementById("hero-video-src").src = `images/hero-${pad(latest.n)}.mp4`;
+heroVideo.load(); // missing file? the poster still shows — slot preserved
+
+/* --- Ticker (content duplicated for a seamless loop) --- */
+const seq = DROPS.map(d => `Fresh drop daily <i>✿</i> Nº ${pad(d.n)} · ${d.title}`).join(" ") + " ";
+document.getElementById("ticker-track").innerHTML = `<span>${seq}</span><span>${seq}</span>`;
+
+/* --- Vault: collector cards, newest first --- */
 const grid = document.getElementById("drop-grid");
 
-DROPS.forEach(drop => {
+DROPS.forEach((drop, i) => {
   const card = document.createElement("article");
   card.className = "drop-card reveal";
+  const badge = i === 0
+    ? `<span class="badge badge-new">New</span>`
+    : `<span class="badge badge-vault">In the vault</span>`;
   card.innerHTML = `
-    <img src="${drop.image}" alt="Patch Drop #${String(drop.n).padStart(3, "0")} — ${drop.title}: ${drop.line}" loading="lazy">
+    <div class="card-media">
+      <img src="${drop.image}" alt="Patch Drop Nº ${pad(drop.n)} — ${drop.title}: ${drop.line}" loading="lazy">
+      ${badge}
+    </div>
     <div class="drop-card-body">
-      <p class="drop-num">Patch Drop #${String(drop.n).padStart(3, "0")}</p>
+      <p class="drop-num"><span class="stitch-tag">Nº ${pad(drop.n)}</span><time datetime="${drop.date}">${fmtDate(drop.date)}</time></p>
       <h3>${drop.title}</h3>
-      <p>${drop.line}</p>
+      <p class="drop-line">${drop.line}</p>
+      <button class="collect-btn" type="button" data-n="${drop.n}" aria-pressed="false"></button>
     </div>`;
   grid.appendChild(card);
 });
 
-/* Gentle scroll reveal */
-const observer = new IntersectionObserver(entries => {
+function refreshCollectUI() {
+  document.querySelectorAll(".collect-btn").forEach(btn => {
+    const n = Number(btn.dataset.n);
+    const has = collected.has(n);
+    btn.classList.toggle("is-collected", has);
+    btn.textContent = has ? "✓ Collected" : `Collect Nº ${pad(n)}`;
+    btn.setAttribute("aria-pressed", String(has));
+  });
+  const heroBtn = document.getElementById("hero-collect");
+  const hasLatest = collected.has(latest.n);
+  heroBtn.classList.toggle("is-collected", hasLatest);
+  heroBtn.textContent = hasLatest ? "✓ In your collection" : `Collect Nº ${pad(latest.n)}`;
+  heroBtn.setAttribute("aria-pressed", String(hasLatest));
+
+  const done = DROPS.filter(d => collected.has(d.n)).length;
+  const total = DROPS.length;
+  document.getElementById("collection-progress").textContent =
+    (done === total && total > 0)
+      ? `Your collection: ${done} of ${total} — complete set`
+      : `Your collection: ${done} of ${total}`;
+}
+
+function toggleCollect(n) {
+  if (collected.has(n)) collected.delete(n);
+  else collected.add(n);
+  saveCollected(collected);
+  refreshCollectUI();
+}
+
+document.addEventListener("click", e => {
+  const btn = e.target.closest(".collect-btn");
+  if (btn) toggleCollect(Number(btn.dataset.n));
+});
+document.getElementById("hero-collect").addEventListener("click", () => toggleCollect(latest.n));
+refreshCollectUI();
+
+/* --- Countdown to the next drop: next midnight America/New_York. Real, honest. --- */
+function msToNextMidnightET() {
+  const etNow = new Date(new Date().toLocaleString("en-US", { timeZone: "America/New_York" }));
+  const next = new Date(etNow);
+  next.setHours(24, 0, 0, 0);
+  return Math.max(0, next - etNow);
+}
+function tickCountdown() {
+  const ms = msToNextMidnightET();
+  const h = Math.floor(ms / 3.6e6);
+  const m = Math.floor(ms % 3.6e6 / 6e4);
+  const s = Math.floor(ms % 6e4 / 1e3);
+  document.getElementById("countdown").textContent =
+    `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+}
+tickCountdown();
+setInterval(tickCountdown, 1000);
+
+/* --- Gentle scroll reveal --- */
+const revealObserver = new IntersectionObserver(entries => {
   entries.forEach(e => {
     if (e.isIntersecting) {
       e.target.classList.add("visible");
-      observer.unobserve(e.target);
+      revealObserver.unobserve(e.target);
     }
   });
 }, { threshold: 0.12 });
+document.querySelectorAll(".reveal").forEach(el => revealObserver.observe(el));
 
-document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
+/* --- Thread-draw divider: the one signature scroll motion --- */
+const divider = document.querySelector(".thread-divider");
+if (divider) {
+  const drawObserver = new IntersectionObserver((entries, obs) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        divider.classList.add("drawn");
+        obs.disconnect();
+      }
+    });
+  }, { threshold: 0.5 });
+  drawObserver.observe(divider);
+}

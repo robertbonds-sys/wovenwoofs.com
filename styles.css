@@ -1,4 +1,5 @@
-/* Woven Woofs — heritage calm. Plain, warm, tactile. */
+/* Woven Woofs — collector's club for a craft object.
+   Design system: one stitch motif, one fabric grain, one display face. */
 
 :root {
   --paper: #faf6ee;
@@ -9,8 +10,12 @@
   --thread-deep: #8f3e2e;
   --card: #fffdf8;
   --shadow: 0 2px 6px rgba(43, 38, 32, 0.08), 0 12px 32px rgba(43, 38, 32, 0.10);
-  --shadow-lift: 0 4px 10px rgba(43, 38, 32, 0.10), 0 22px 48px rgba(43, 38, 32, 0.16);
+  --shadow-lift: 0 6px 14px rgba(43, 38, 32, 0.12), 0 26px 54px rgba(43, 38, 32, 0.18);
   --radius: 18px;
+  --font-display: "Baloo 2", Georgia, "Times New Roman", serif;
+  --font-body: "Work Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  /* Subtle fabric grain, one texture used sparingly */
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -20,18 +25,21 @@ html { scroll-behavior: smooth; }
 body {
   background: var(--paper);
   color: var(--ink);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  font-family: var(--font-body);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
 }
 
 h1, h2, .wordmark {
-  font-family: Georgia, "Times New Roman", serif;
-  font-weight: 600;
-  letter-spacing: -0.01em;
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: 0;
+  line-height: 1.1;
 }
 
 a { color: var(--thread-deep); }
+
+button { font: inherit; }
 
 /* Header */
 
@@ -45,7 +53,7 @@ a { color: var(--thread-deep); }
 }
 
 .wordmark {
-  font-size: 1.4rem;
+  font-size: 1.5rem;
   color: var(--ink);
   text-decoration: none;
 }
@@ -56,11 +64,12 @@ a { color: var(--thread-deep); }
   color: var(--ink-soft);
   text-decoration: none;
   font-size: 0.95rem;
+  font-weight: 500;
 }
 
 .site-header nav a:hover { color: var(--thread-deep); }
 
-/* Hero */
+/* Hero — today's drop reveal */
 
 .hero {
   max-width: 1100px;
@@ -79,6 +88,16 @@ a { color: var(--thread-deep); }
   background: var(--paper-deep);
   aspect-ratio: 1 / 1;
   position: relative;
+  border: 1px solid rgba(43, 38, 32, 0.08);
+}
+
+.hero-media::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--grain);
+  z-index: 1;
+  pointer-events: none;
 }
 
 .hero-media video {
@@ -97,6 +116,7 @@ a { color: var(--thread-deep); }
   transform: translateX(-120%);
   animation: sheen 2.8s ease-out 0.6s 1 forwards;
   pointer-events: none;
+  z-index: 2;
 }
 
 @keyframes sheen {
@@ -105,23 +125,48 @@ a { color: var(--thread-deep); }
 
 .kicker {
   color: var(--thread-deep);
-  font-size: 0.85rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
 }
 
 .hero-copy h1 {
-  font-size: clamp(2rem, 4.5vw, 3.2rem);
-  line-height: 1.15;
-  margin-bottom: 1rem;
+  font-size: clamp(2.4rem, 5.5vw, 3.8rem);
+  margin-bottom: 0.75rem;
 }
 
 .lede {
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   color: var(--ink-soft);
-  margin-bottom: 1.75rem;
+  margin-bottom: 1.5rem;
   max-width: 26rem;
+}
+
+.countdown {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin-bottom: 1.75rem;
+}
+
+.countdown-label {
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+}
+
+.countdown-time {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.9rem;
+  color: var(--thread-deep);
+  font-variant-numeric: tabular-nums;
+  border: 2px dashed rgba(179, 84, 63, 0.55); /* the stitch motif */
+  border-radius: 12px;
+  padding: 0.1rem 0.9rem;
+  background: var(--card);
 }
 
 .hero-links { display: flex; gap: 0.75rem; flex-wrap: wrap; }
@@ -133,8 +178,11 @@ a { color: var(--thread-deep); }
   text-decoration: none;
   padding: 0.7rem 1.4rem;
   border-radius: 999px;
+  border: none;
   font-size: 0.95rem;
-  transition: background 0.2s ease, transform 0.2s ease;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .btn:hover { background: var(--thread-deep); transform: translateY(-1px); }
@@ -142,28 +190,113 @@ a { color: var(--thread-deep); }
 .btn-ghost {
   background: transparent;
   color: var(--thread-deep);
-  border: 1.5px solid var(--thread);
+  border: 2px dashed var(--thread); /* stitched outline */
 }
 
 .btn-ghost:hover { background: rgba(179, 84, 63, 0.08); }
 
-/* Drops */
+/* Ticker */
 
-.drops {
+.ticker {
+  background: var(--ink);
+  color: var(--paper);
+  overflow: hidden;
+  white-space: nowrap;
+  padding: 0.6rem 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+}
+
+.ticker-track {
+  display: inline-flex;
+  animation: ticker 26s linear infinite;
+}
+
+.ticker-track span { padding-right: 0.5rem; }
+
+@keyframes ticker {
+  to { transform: translateX(-50%); }
+}
+
+/* Trust strip — honest, no fake urgency */
+
+.trust {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 1.4rem 1rem 0.4rem;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+.trust-sep { color: var(--thread); font-size: 0.8rem; }
+
+/* Thread-draw divider: one signature scroll motion */
+
+.thread-divider {
+  max-width: 620px;
+  margin: 1.2rem auto 0;
+  padding: 0 clamp(1.25rem, 5vw, 3rem);
+}
+
+.thread-divider svg {
+  display: block;
+  width: 100%;
+  height: 24px;
+}
+
+.thread-draw {
+  fill: none;
+  stroke: var(--thread);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 1.4s ease;
+}
+
+/* Stitch dashes punched through the drawn line */
+.thread-stitch {
+  fill: none;
+  stroke: var(--paper);
+  stroke-width: 3.5;
+  stroke-dasharray: 0.014 0.012;
+  opacity: 0;
+  transition: opacity 0.5s ease 1.15s;
+}
+
+.thread-divider.drawn .thread-draw { stroke-dashoffset: 0; }
+.thread-divider.drawn .thread-stitch { opacity: 1; }
+
+/* The Vault */
+
+.vault {
   max-width: 1100px;
   margin: 0 auto;
   padding: clamp(2rem, 6vw, 4rem) clamp(1.25rem, 5vw, 3rem);
 }
 
-.drops h2 { font-size: 1.8rem; margin-bottom: 0.25rem; }
+.vault h2 { font-size: 2rem; margin-bottom: 0.25rem; }
 
 .section-sub { color: var(--ink-soft); margin-bottom: 2rem; }
 
+.collection-progress {
+  font-weight: 600;
+  color: var(--thread-deep);
+}
+
 .drop-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 1.5rem;
 }
+
+/* Collector card — backer-card feel, patch lift on hover */
 
 .drop-card {
   background: var(--card);
@@ -171,42 +304,135 @@ a { color: var(--thread-deep); }
   overflow: hidden;
   box-shadow: var(--shadow);
   transition: transform 0.25s ease, box-shadow 0.25s ease;
-  text-decoration: none;
   color: inherit;
   display: block;
+  position: relative;
+  border: 1px solid rgba(43, 38, 32, 0.07);
 }
 
-/* Picking up a real patch */
+.drop-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--grain);
+  border-radius: inherit;
+  pointer-events: none;
+}
+
 .drop-card:hover {
-  transform: translateY(-6px);
+  transform: translateY(-6px) rotate(-0.4deg);
   box-shadow: var(--shadow-lift);
 }
 
-.drop-card img {
+.card-media {
+  position: relative;
+  overflow: hidden;
+  background: var(--paper-deep);
+}
+
+.card-media img {
   width: 100%;
   aspect-ratio: 1 / 1;
   object-fit: cover;
   display: block;
-  background: var(--paper-deep);
+  transition: transform 0.35s ease;
+}
+
+.drop-card:hover .card-media img { transform: scale(1.04); }
+
+.badge {
+  position: absolute;
+  top: 0.8rem;
+  left: 0.8rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  padding: 0.25rem 0.8rem;
+  z-index: 1;
+}
+
+.badge-new {
+  background: var(--thread);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(43, 38, 32, 0.25);
+}
+
+.badge-vault {
+  background: rgba(250, 246, 238, 0.94);
+  color: var(--ink-soft);
+  border: 1.5px dashed var(--ink-soft); /* stitched frame */
 }
 
 .drop-card-body { padding: 1.1rem 1.25rem 1.25rem; }
 
 .drop-num {
-  font-size: 0.78rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-bottom: 0.45rem;
+}
+
+/* Stitched treatment, reserved for numbers/labels */
+.stitch-tag {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
   color: var(--thread-deep);
-  margin-bottom: 0.3rem;
+  border: 1.5px dashed var(--thread);
+  border-radius: 999px;
+  padding: 0.12rem 0.7rem;
+  white-space: nowrap;
+}
+
+.drop-num time {
+  font-size: 0.82rem;
+  color: var(--ink-soft);
 }
 
 .drop-card-body h3 {
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 1.15rem;
-  margin-bottom: 0.35rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.3rem;
+  margin-bottom: 0.3rem;
 }
 
-.drop-card-body p { font-size: 0.92rem; color: var(--ink-soft); }
+.drop-line { font-size: 0.92rem; color: var(--ink-soft); margin-bottom: 1rem; }
+
+/* Collect button — label-driven: swap to "Buy" + checkout link later, no redesign */
+.collect-btn {
+  width: 100%;
+  background: var(--thread);
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 0.65rem 1rem;
+  font-weight: 600;
+  font-size: 0.92rem;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.collect-btn:hover { background: var(--thread-deep); transform: translateY(-1px); }
+
+.collect-btn.is-collected {
+  background: transparent;
+  color: var(--thread-deep);
+  border: 2px dashed var(--thread);
+}
+
+.collect-btn.is-collected:hover { background: rgba(179, 84, 63, 0.08); }
+
+.btn-collect.is-collected {
+  background: transparent;
+  color: var(--thread-deep);
+  border: 2px dashed var(--thread);
+}
+
+.btn-collect.is-collected:hover { background: rgba(179, 84, 63, 0.08); }
 
 /* Scroll reveal */
 
@@ -218,12 +444,6 @@ a { color: var(--thread-deep); }
 
 .reveal.visible { opacity: 1; transform: none; }
 
-@media (prefers-reduced-motion: reduce) {
-  .reveal { opacity: 1; transform: none; transition: none; }
-  .sheen::after { display: none; }
-  html { scroll-behavior: auto; }
-}
-
 /* About */
 
 .about {
@@ -232,7 +452,48 @@ a { color: var(--thread-deep); }
   padding: clamp(2rem, 6vw, 4rem) clamp(1.25rem, 5vw, 3rem);
 }
 
-.about h2 { font-size: 1.8rem; margin-bottom: 1rem; }
+.about h2 { font-size: 2rem; margin-bottom: 1.5rem; }
+
+.how {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.how-step {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 1.1rem 1rem;
+  box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
+}
+
+.how-step::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--grain);
+  pointer-events: none;
+}
+
+.how-n {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1rem;
+  color: var(--thread-deep);
+  border: 2px dashed var(--thread);
+  border-radius: 50%;
+  margin-bottom: 0.6rem;
+}
+
+.how-step p { font-size: 0.92rem; color: var(--ink-soft); }
 
 .about-body p { margin-bottom: 1rem; color: var(--ink-soft); }
 
@@ -241,7 +502,7 @@ a { color: var(--thread-deep); }
 /* Footer */
 
 .site-footer {
-  border-top: 1px solid rgba(43, 38, 32, 0.12);
+  border-top: 2px dashed rgba(43, 38, 32, 0.18); /* stitch motif */
   margin-top: 2rem;
   padding: 2rem clamp(1.25rem, 5vw, 3rem) 2.5rem;
   text-align: center;
@@ -256,12 +517,26 @@ a { color: var(--thread-deep); }
   margin-bottom: 0.75rem;
 }
 
-.site-footer a { color: var(--thread-deep); text-decoration: none; }
+.site-footer a { color: var(--thread-deep); text-decoration: none; font-weight: 500; }
 .site-footer a:hover { text-decoration: underline; }
 
 /* Mobile */
 
 @media (max-width: 720px) {
   .hero { grid-template-columns: 1fr; }
-  .hero-media { max-width: 420px; margin: 0 auto; width: 100%; }
+  .hero-media { max-width: 440px; margin: 0 auto; width: 100%; }
+  .how { grid-template-columns: 1fr; }
+  .countdown-time { font-size: 1.6rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .reveal { opacity: 1; transform: none; transition: none; }
+  .sheen::after { display: none; }
+  .ticker-track { animation: none; }
+  .thread-draw { stroke-dashoffset: 0; transition: none; }
+  .thread-stitch { opacity: 1; transition: none; }
+  .drop-card:hover { transform: none; }
+  .drop-card:hover .card-media img { transform: none; }
+  .btn:hover, .collect-btn:hover { transform: none; }
 }
