@@ -1,6 +1,9 @@
-/* Woven Woofs drops. Newest first. To add a drop: copy an entry,
-   bump the number, point image at images/drop-NNN.jpg.
-   The hero, ticker, vault cards, and countdown all read from this list. */
+/* Woven Woofs drops, newest first.
+   `date` is the reveal date (YYYY-MM-DD, Eastern): the drop stays
+   hidden until midnight ET of that day, then appears on its own.
+   To stage a future drop: copy an entry, bump the number, point image
+   at images/drop-NNN.jpg, set the date. No code changes needed.
+   Hero, ticker, vault cards, and countdown all read the visible list. */
 
 const DROPS = [
   {
@@ -20,6 +23,21 @@ const DROPS = [
 ];
 
 const pad = n => String(n).padStart(3, "0");
+
+/* --- Drop scheduling: drops auto-reveal at midnight America/New_York ---
+   A drop renders only once its reveal date has arrived in ET. Staged
+   future drops sit in this file, invisible, until their day comes. */
+function etTodayISO() {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/New_York", year: "numeric", month: "2-digit", day: "2-digit"
+  }).formatToParts(new Date());
+  const get = t => parts.find(p => p.type === t).value;
+  return `${get("year")}-${get("month")}-${get("day")}`;
+}
+const revealed = DROPS.filter(d => d.date <= etTodayISO());
+/* Never render an empty page: if every entry is staged for the future,
+   fall back to the earliest drop (a config slip, but the site stays up). */
+const live = revealed.length ? revealed : [DROPS[DROPS.length - 1]];
 const fmtDate = iso =>
   new Date(iso + "T12:00:00Z").toLocaleDateString("en-US", {
     month: "short", day: "numeric", year: "numeric", timeZone: "UTC"
@@ -44,8 +62,8 @@ function saveCollected(set) {
 }
 let collected = loadCollected();
 
-/* --- Hero = today's drop (DROPS[0]) --- */
-const latest = DROPS[0];
+/* --- Hero = today's drop (newest revealed) --- */
+const latest = live[0];
 document.getElementById("hero-kicker").textContent = `Drop Nº ${pad(latest.n)} · fresh today`;
 document.getElementById("hero-title").textContent = latest.title;
 const heroVideo = document.getElementById("hero-video");
@@ -54,13 +72,13 @@ document.getElementById("hero-video-src").src = `images/hero-${pad(latest.n)}.mp
 heroVideo.load(); // missing file? the poster still shows — slot preserved
 
 /* --- Ticker (content duplicated for a seamless loop) --- */
-const seq = DROPS.map(d => `Fresh drop daily <i>✿</i> Nº ${pad(d.n)} · ${d.title}`).join(" ") + " ";
+const seq = live.map(d => `Fresh drop daily <i>✿</i> Nº ${pad(d.n)} · ${d.title}`).join(" ") + " ";
 document.getElementById("ticker-track").innerHTML = `<span>${seq}</span><span>${seq}</span>`;
 
 /* --- Vault: collector cards, newest first --- */
 const grid = document.getElementById("drop-grid");
 
-DROPS.forEach((drop, i) => {
+live.forEach((drop, i) => {
   const card = document.createElement("article");
   card.className = "drop-card reveal";
   const badge = i === 0
@@ -94,8 +112,8 @@ function refreshCollectUI() {
   heroBtn.textContent = hasLatest ? "✓ In your collection" : `Collect Nº ${pad(latest.n)}`;
   heroBtn.setAttribute("aria-pressed", String(hasLatest));
 
-  const done = DROPS.filter(d => collected.has(d.n)).length;
-  const total = DROPS.length;
+  const done = live.filter(d => collected.has(d.n)).length;
+  const total = live.length;
   document.getElementById("collection-progress").textContent =
     (done === total && total > 0)
       ? `Your collection: ${done} of ${total} — complete set`

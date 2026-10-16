@@ -7,6 +7,13 @@ Static site for Woven Woofs. GitHub Pages + Cloudflare. No build step — push a
 - `index.html` — hero (today's drop reveal + countdown), stitched ticker, trust strip, thread-draw divider, the Vault (drop archive), about, footer
 - `styles.css` — stitch-first design system: Baloo 2 display + Work Sans body, one dashed-stitch motif, one fabric grain (inline SVG, low opacity), collector cards with patch-lift hover, `prefers-reduced-motion` support
 - `app.js` — drop data + rendering. **To add a drop:** copy an entry in `DROPS`, bump the number, point `image` at the new file. Newest first. The hero, ticker, Vault, and countdown all read from this list automatically.
+
+## Drop scheduling (auto-reveal at midnight ET)
+
+Each `DROPS` entry has a `date` (YYYY-MM-DD, Eastern). A drop stays hidden until midnight ET of its date, then appears on its own — hero, ticker, Vault, countdown, and collection count all update. To stage a future drop, commit the entry + image with a future date; nothing else needs to change.
+
+- Stage unposted drops only once this repo is private, or the image file is visible in the repo even while hidden on the site.
+- The countdown already ticks to the next midnight ET — that's the moment the next staged drop reveals.
 - `images/` — drop artwork. `drop-001.jpg`, `drop-002.jpg` seeded.
 - `images/hero-NNN.mp4` — **not yet added.** Drop the Midjourney ambient loop here (muted, looping), named for the current drop number, e.g. `images/hero-002.mp4`. The hero `<video>` falls back to the drop's still poster when the file is absent.
 - `CNAME` — custom domain for GitHub Pages (`wovenwoofs.com`). Do not remove.
