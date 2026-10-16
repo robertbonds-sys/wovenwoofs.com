@@ -1,14 +1,30 @@
 User-agent: *
 Allow: /
 
-# AI crawlers explicitly welcome
+# AI training crawlers: site text is welcome, product images are not.
+# (Regular search crawlers, including Google Images, stay fully allowed.)
 User-agent: GPTBot
 Allow: /
+Disallow: /images/
+
 User-agent: ClaudeBot
 Allow: /
+Disallow: /images/
+
 User-agent: PerplexityBot
 Allow: /
+Disallow: /images/
+
+User-agent: CCBot
+Allow: /
+Disallow: /images/
+
 User-agent: Google-Extended
 Allow: /
+Disallow: /images/
+
+User-agent: Bytespider
+Allow: /
+Disallow: /images/
 
 Sitemap: https://wovenwoofs.com/sitemap.xml
