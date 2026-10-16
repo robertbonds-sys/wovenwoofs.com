@@ -7,6 +7,13 @@
 
 const DROPS = [
   {
+    n: 3,
+    title: "The Bumblepug",
+    line: "A pug in black-and-yellow bumblebee stripes.",
+    image: "images/drop-003.jpg",
+    date: "2026-10-16"
+  },
+  {
     n: 2,
     title: "The Corgi Cadet",
     line: "A corgi in an astronaut suit, looking up.",
