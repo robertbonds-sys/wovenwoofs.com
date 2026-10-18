@@ -7,6 +7,13 @@
 
 const DROPS = [
   {
+    n: 4,
+    title: "The Lobster Dachshund",
+    line: "A dachshund in a lobster costume.",
+    image: "images/drop-004.jpg",
+    date: "2026-10-18"
+  },
+  {
     n: 3,
     title: "The Bumblepug",
     line: "A pug in black-and-yellow bumblebee stripes.",

@@ -12,6 +12,7 @@ Woven Woofs is a daily collectible drop series: photorealistic embroidered-patch
 - Drop Nº 001 — The Puggle Lion: a puggle in a lion mane.
 - Drop Nº 002 — The Corgi Cadet: a corgi in an astronaut suit.
 - Drop Nº 003 — The Bumblepug: a pug in black-and-yellow bumblebee stripes.
+- Drop Nº 004 — The Lobster Dachshund: a dachshund in a lobster costume.
 
 ## How drops work
 
